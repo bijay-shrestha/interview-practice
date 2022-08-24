@@ -9,8 +9,4 @@ public interface BiddingDataService {
     BiddingResponseDTO bid(BiddingRequestDTO biddingRequestDTO);
 
     Double getBestBid(LocalDateTime localDateTime);
-
-    Double getBestOffer(LocalDateTime localDateTime);
-
-    String getNBBO(LocalDateTime localDateTime);
 }

@@ -18,24 +18,10 @@ public class BiddingData implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "bid_time")
-    private LocalDateTime bidTime;
+    private Double bidPrice;
 
-    @ManyToOne
-    private Company company;
+    @OneToOne
+    @JoinColumn(name = "offer_data", nullable = false)
+    private OfferData offerData;
 
-    @ManyToOne
-    private Broker broker;
-
-    private Double bid;
-
-    private Double offer;
-
-    public BiddingData(LocalDateTime bidTime, Company company, Broker broker, Double bid, Double offer) {
-        this.bidTime = bidTime;
-        this.company = company;
-        this.broker = broker;
-        this.bid = bid;
-        this.offer = offer;
-    }
 }

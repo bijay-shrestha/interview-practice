@@ -1,12 +1,12 @@
 package com.bijays.interviewpractice.api.v1;
 
-import com.bijays.interviewpractice.service.BiddingDataService;
+import com.bijays.interviewpractice.dto.request.OfferRequestDTO;
+import com.bijays.interviewpractice.dto.response.OfferResponseDTO;
+import com.bijays.interviewpractice.service.OfferDataService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -14,15 +14,21 @@ import java.time.LocalDateTime;
 @RequestMapping(value = "/offer")
 public class OfferResource {
 
-    private final BiddingDataService biddingDataService;
+    private final OfferDataService offerDataService;
 
-    public OfferResource(BiddingDataService biddingDataService) {
-        this.biddingDataService = biddingDataService;
+    public OfferResource(OfferDataService offerDataService) {
+        this.offerDataService = offerDataService;
     }
+
+    @PostMapping
+    public ResponseEntity<OfferResponseDTO> addOffer(@RequestBody OfferRequestDTO offerRequestDTO){
+        return new ResponseEntity<OfferResponseDTO>(offerDataService.addOffer(offerRequestDTO), HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/best")
     public ResponseEntity<Double> getBestOffer(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                    @RequestParam LocalDateTime dateTime){
-        return ResponseEntity.ok(biddingDataService.getBestOffer(dateTime));
+        return ResponseEntity.ok(offerDataService.getBestOffer(dateTime));
     }
 }

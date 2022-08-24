@@ -1,6 +1,7 @@
 package com.bijays.interviewpractice.api.v1;
 
 import com.bijays.interviewpractice.service.BiddingDataService;
+import com.bijays.interviewpractice.service.NBBOService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +15,16 @@ import java.time.LocalDateTime;
 @RequestMapping(value = "/nbbo")
 public class NBBOResource {
 
-    private final BiddingDataService biddingDataService;
+    private final NBBOService nbboService;
 
-    public NBBOResource(BiddingDataService biddingDataService) {
-        this.biddingDataService = biddingDataService;
+    public NBBOResource(NBBOService nbboService) {
+        this.nbboService = nbboService;
     }
 
     @GetMapping
     public ResponseEntity<String> getNBBO(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                @RequestParam LocalDateTime dateTime){
-        return ResponseEntity.ok(biddingDataService.getNBBO(dateTime));
+        return ResponseEntity.ok(nbboService.getNBBO(dateTime));
     }
 
 }

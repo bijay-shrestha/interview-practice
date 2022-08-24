@@ -52,24 +52,10 @@ public class BiddingDataServiceImpl implements BiddingDataService {
 
     @Override
     public Double getBestBid(LocalDateTime localDateTime) {
-        Collection<BiddingData> biddingDataList = biddingDataRepository.findByBidTime(localDateTime);
+        Collection<BiddingData> biddingDataList = biddingDataRepository.getBiddingDataQueryByDateTime(localDateTime);
         List<Double> bids = new ArrayList<>();
-        biddingDataList.stream().map(bid->bids.add(bid.getBid())).collect(Collectors.toList());
+        biddingDataList.stream().map(bid->bids.add(bid.getBidPrice())).collect(Collectors.toList());
         return bids.stream().max(Comparator.naturalOrder()).get();
     }
 
-    @Override
-    public Double getBestOffer(LocalDateTime localDateTime) {
-        Collection<BiddingData> biddingDataList = biddingDataRepository.findByBidTime(localDateTime);
-        List<Double> offer = new ArrayList<>();
-        biddingDataList.stream().map(bid->offer.add(bid.getOffer())).collect(Collectors.toList());
-        return offer.stream().max(Comparator.naturalOrder()).get();
-    }
-
-    @Override
-    public String getNBBO(LocalDateTime localDateTime) {
-       Double bestBid = getBestBid(localDateTime);
-       Double bestOffer = getBestOffer(localDateTime);
-       return bestBid + " @ " + bestOffer;
-    }
 }
