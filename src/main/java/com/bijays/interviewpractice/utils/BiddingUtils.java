@@ -5,6 +5,7 @@ import com.bijays.interviewpractice.dto.response.BiddingResponseDTO;
 import com.bijays.interviewpractice.model.BiddingData;
 import com.bijays.interviewpractice.model.Broker;
 import com.bijays.interviewpractice.model.Company;
+import com.bijays.interviewpractice.model.OfferData;
 
 public class BiddingUtils {
 
@@ -20,15 +21,10 @@ public class BiddingUtils {
         return response;
     }
 
-    public static BiddingData parseBiddingRequestDTOToBidding(BiddingRequestDTO biddingRequestDTO,
-                                                         Company company,
-                                                         Broker broker){
+    public static BiddingData parseBiddingRequestDTOToBidding(BiddingRequestDTO biddingRequestDTO, OfferData offerData){
         BiddingData biddingData = new BiddingData();
-        biddingData.getOfferData().setDateTime(biddingRequestDTO.getBidTime());
-        biddingData.getOfferData().setCompany(company);
-        biddingData.getOfferData().setBroker(broker);
         biddingData.setBidPrice(biddingRequestDTO.getBid());
-        biddingData.getOfferData().setOfferPrice(biddingRequestDTO.getOffer());
+        biddingData.setOfferData(offerData);
         return biddingData;
     }
 }

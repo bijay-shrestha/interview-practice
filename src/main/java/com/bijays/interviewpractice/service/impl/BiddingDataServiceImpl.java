@@ -6,9 +6,9 @@ import com.bijays.interviewpractice.exception.DataNotFoundException;
 import com.bijays.interviewpractice.model.BiddingData;
 import com.bijays.interviewpractice.model.Broker;
 import com.bijays.interviewpractice.model.Company;
+import com.bijays.interviewpractice.model.OfferData;
 import com.bijays.interviewpractice.repository.BiddingDataRepository;
-import com.bijays.interviewpractice.repository.BrokerRepository;
-import com.bijays.interviewpractice.repository.CompanyRepository;
+import com.bijays.interviewpractice.repository.OfferDataRepository;
 import com.bijays.interviewpractice.service.BiddingDataService;
 import com.bijays.interviewpractice.utils.BiddingUtils;
 import org.springframework.stereotype.Service;
@@ -21,38 +21,31 @@ import java.util.stream.Collectors;
 public class BiddingDataServiceImpl implements BiddingDataService {
 
     private final BiddingDataRepository biddingDataRepository;
-    private final CompanyRepository companyRepository;
-    private final BrokerRepository brokerRepository;
+    private final OfferDataRepository offerDataRepository;
 
     public BiddingDataServiceImpl(BiddingDataRepository biddingDataRepository,
-                                  CompanyRepository companyRepository,
-                                  BrokerRepository brokerRepository) {
+                                  OfferDataRepository offerDataRepository) {
         this.biddingDataRepository = biddingDataRepository;
-        this.companyRepository = companyRepository;
-        this.brokerRepository = brokerRepository;
+        this.offerDataRepository = offerDataRepository;
     }
 
     @Override
     public BiddingResponseDTO bid(BiddingRequestDTO biddingRequestDTO) throws DataNotFoundException {
-        Optional<Company> company = Optional.of(
-                companyRepository.findById(biddingRequestDTO.getCompanyId())
-                        .orElseThrow(() -> new DataNotFoundException("Company Data Not Found")));
-
-        Optional<Broker> broker = Optional.of(
-                brokerRepository.findById(biddingRequestDTO.getBrokerId())
-                        .orElseThrow(() -> new DataNotFoundException("Broker Data Not Found")));
+        Optional<OfferData> offerData = Optional.of(
+                offerDataRepository.findById(biddingRequestDTO.getOfferId())
+                        .orElseThrow(() -> new DataNotFoundException("Offer Data Not Found")));
 
         BiddingData biddingData = BiddingUtils.parseBiddingRequestDTOToBidding(
                 biddingRequestDTO,
-                company.get(),
-                broker.get());
+                offerData.get());
         biddingData = biddingDataRepository.save(biddingData);
         return BiddingUtils.parseBiddingDataToBiddingResponseDTO(biddingData);
     }
 
     @Override
     public Double getBestBid(LocalDateTime localDateTime) {
-        Collection<BiddingData> biddingDataList = biddingDataRepository.getBiddingDataQueryByDateTime(localDateTime);
+        Collection<BiddingData> biddingDataList =
+                biddingDataRepository.getBiddingDataQueryByDateTime(localDateTime);
         List<Double> bids = new ArrayList<>();
         biddingDataList.stream().map(bid->bids.add(bid.getBidPrice())).collect(Collectors.toList());
         return bids.stream().max(Comparator.naturalOrder()).get();
